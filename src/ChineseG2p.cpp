@@ -1,4 +1,4 @@
-#include <cpp-pinyin/ChineseG2p.h>
+﻿#include <cpp-pinyin/ChineseG2p.h>
 #include <cpp-pinyin/G2pglobal.h>
 
 #include "ChineseG2p_p.h"
@@ -8,6 +8,10 @@
 #include <filesystem>
 
 #include "cpp-pinyin/U16Str.h"
+
+#if defined(_MSC_VER)
+#pragma warning(disable : 4018)
+#endif
 
 namespace Pinyin
 {
@@ -85,8 +89,6 @@ namespace Pinyin
             loadDict(dict_dir / "word.txt", word_dict) &&
             loadDict(dict_dir / "trans_word.txt", trans_dict);
 
-        toneSeen.reserve(4);
-        toneCandidates.reserve(4);
     }
 
     // get all chinese characters and positions in the list
@@ -98,7 +100,7 @@ namespace Pinyin
             if (!item)
                 continue;
 
-            const auto &simItem = trans_dict.find(item) != trans_dict.end() ? trans_dict[item] : item;
+            const auto simItem = tradToSim(item);
 
             if (word_dict.find(simItem) != word_dict.end()) {
                 res.emplace_back(simItem);

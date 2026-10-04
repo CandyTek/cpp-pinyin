@@ -1,11 +1,13 @@
-#include <filesystem>
+﻿#include <filesystem>
 
 #include <cpp-pinyin/Pinyin.h>
 #include <cpp-pinyin/G2pglobal.h>
 #include <iostream>
+#include <string>
 
 #include "JyuptingTest.h"
 #include "ManTest.h"
+#include "ConcurrencyTest.h"
 
 using namespace Test;
 
@@ -13,6 +15,17 @@ int main(int argc, char *argv[]) {
     const auto applicationDirPath = std::filesystem::current_path() / "dict";
     Pinyin::setDictionaryPath(applicationDirPath);
     std::cout << "Path: " << applicationDirPath << std::endl;
+
+    if (!concurrencyTest()) {
+        std::cerr << "Concurrent queries on one Pinyin instance failed." << std::endl;
+        return 1;
+    }
+    if (argc > 1 && std::string(argv[1]) == "--concurrency-only")
+        return 0;
+    if (argc > 1 && std::string(argv[1]) == "--cantonese-only") {
+        const JyuptingTest jyuptingTest;
+        return jyuptingTest.toneBatchTest() && jyuptingTest.untoneBatchTest() ? 0 : 1;
+    }
 
     const ManTest manTest;
     std::cout << "Pinyin G2P test: " << std::endl;

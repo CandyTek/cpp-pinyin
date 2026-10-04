@@ -4,6 +4,10 @@
 #include <unordered_map>
 #include <vector>
 
+#if defined(_MSC_VER)
+#pragma warning(disable : 4267)
+#endif
+
 namespace Pinyin
 {
     // 定义 phonetic_symbol_reverse 映射表

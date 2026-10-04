@@ -1,4 +1,4 @@
-#ifndef TONEUTIL_H
+﻿#ifndef TONEUTIL_H
 #define TONEUTIL_H
 
 #include <cpp-pinyin/PinyinGlobal.h>

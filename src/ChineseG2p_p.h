@@ -1,4 +1,4 @@
-#ifndef ChineseG2pPRIVATE_H
+﻿#ifndef ChineseG2pPRIVATE_H
 #define ChineseG2pPRIVATE_H
 
 #include <unordered_map>
@@ -52,20 +52,17 @@ namespace Pinyin
             return tonePinyin;
         }
 
-        std::unordered_set<std::string> toneSeen;
-        std::vector<std::string> toneCandidates;
-
         inline std::vector<std::string> getDefaultPinyin(const char16_t &oneHanzi, int style = 0,
                                                          bool v_to_u = false,
-                                                         bool neutral_tone_with_five = false) {
-            const auto &it = word_dict.find(oneHanzi);
+                                                         bool neutral_tone_with_five = false) const {
+            const auto it = word_dict.find(oneHanzi);
             if (it == word_dict.end())
                 return {u16strToUtf8str(oneHanzi)};
 
             const std::vector<std::u16string> &candidates = it->second;
-
-            toneCandidates.clear();
-            toneSeen.clear();
+            std::unordered_set<std::string> toneSeen;
+            std::vector<std::string> toneCandidates;
+            toneCandidates.reserve(candidates.size());
 
             for (const std::u16string &pinyin : candidates) {
                 const auto &tarPinyin = u16strToUtf8str(toneConvert(pinyin, style, v_to_u, neutral_tone_with_five));

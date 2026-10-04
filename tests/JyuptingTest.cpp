@@ -1,4 +1,4 @@
-#include "JyuptingTest.h"
+﻿#include "JyuptingTest.h"
 
 #include <algorithm>
 #include <chrono>
@@ -38,7 +38,7 @@ namespace Test
                 bool diff = false;
                 auto resWords = split(result, " ");
                 for (int i = 0; i < wordSize; i++) {
-                    if (std::find(words.begin(), words.end(), resWords[i]) == words.end()) {
+                    if (i >= resWords.size() || std::find(words.begin(), words.end(), resWords[i]) == words.end()) {
                         diff = true;
                         error++;
                     }
@@ -92,7 +92,7 @@ namespace Test
                 bool diff = false;
                 auto resWords = split(result, " ");
                 for (int i = 0; i < wordSize; i++) {
-                    if (std::find(words.begin(), words.end(), resWords[i]) == words.end()) {
+                    if (i >= resWords.size() || std::find(words.begin(), words.end(), resWords[i]) == words.end()) {
                         diff = true;
                         error++;
                     }

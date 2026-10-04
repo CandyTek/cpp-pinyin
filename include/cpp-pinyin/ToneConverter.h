@@ -1,4 +1,4 @@
-#ifndef TUNEUTIL_H
+﻿#ifndef TUNEUTIL_H
 #define TUNEUTIL_H
 
 #include <functional>
