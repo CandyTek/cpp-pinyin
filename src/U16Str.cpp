@@ -39,14 +39,16 @@ namespace Pinyin
                 // 2-byte sequence
                 utf8str.push_back(static_cast<char>(0xC0 | (ch >> 6)));
                 utf8str.push_back(static_cast<char>(0x80 | (ch & 0x3F)));
-            } else if (ch >= 0xD800 && ch <= 0xDBFF) {
-                // High surrogate (part of a 4-byte UTF-16 character)
-                if (i + 1 >= u16str.size())
-                    throw std::invalid_argument("Invalid UTF-16 surrogate pair");
-
-                const uint16_t low = u16str[i + 1];
-                if (low < 0xDC00 || low > 0xDFFF)
-                    throw std::invalid_argument("Invalid UTF-16 surrogate pair");
+            } else if (ch >= 0xD800 && ch <= 0xDFFF) {
+                // Surrogate (part of a 4-byte UTF-16 character). A lone surrogate is encoded as U+FFFD
+                // instead of throwing: callers pass arbitrary window titles / file names.
+                const uint16_t low = (ch <= 0xDBFF && i + 1 < u16str.size()) ? u16str[i + 1] : 0;
+                if (low < 0xDC00 || low > 0xDFFF) {
+                    utf8str.push_back(static_cast<char>(0xEF));
+                    utf8str.push_back(static_cast<char>(0xBF));
+                    utf8str.push_back(static_cast<char>(0xBD));
+                    continue;
+                }
 
                 const uint32_t codepoint = ((ch - 0xD800) << 10) + (low - 0xDC00) + 0x10000;
                 utf8str.push_back(static_cast<char>(0xF0 | (codepoint >> 18)));
